@@ -3,12 +3,12 @@ services:
   nginx:
     build:
       context: '.'
-      dockerfile: 'Dockerfile'
+      dockerfile: 'Dockerfile-${PHP_VERSION}'
       args:
-        - 'PHP_VERSION=${PHP_VERSION}'
         - 'SERVER_ROOT=${SERVER_ROOT}'
+        - 'PHP_VERSION=${PHP_VERSION}'
         - 'DISPLAY_PHPERROR=${DISPLAY_PHPERROR}'
-        - 'XDEBUG=${XDEBUG}'
+        - 'MONGODB_VERSION=${MONGODB_VERSION}'
     volumes:
       - '${APP_CODE_PATH_HOST}:${APP_CODE_PATH_NGINX}${APP_CODE_CONTAINER_FLAG}'
     ports:
