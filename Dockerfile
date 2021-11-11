@@ -9,11 +9,11 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="2.0" \
       org.label-schema.vendor="PHP" \
       org.label-schema.name="docker-php" \
-      org.label-schema.description="Docker For PHP Developers - Docker image with PHP 7.4.24, Nginx, and Alpine" \
+      org.label-schema.description="Docker For PHP Developers - Docker image with PHP 8.0.11, Nginx, and Alpine" \
       org.label-schema.url="https://github.com/deck-app/nginx-stack"
 
 # PHP_INI_DIR to be symmetrical with official php docker image
-ENV PHP_INI_DIR /etc/php7
+ENV PHP_INI_DIR /etc/php8
 
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -22,45 +22,45 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ARG DEPS="\
         nginx \
         nginx-mod-http-headers-more \
-        php7 \
-        php7-fpm \
+        php8 \
+        php8-fpm \
+        composer \
         curl \
         ca-certificates \
         runit \
-        php7-phar \
-        php7-bcmath \
-        php7-calendar \
-        php7-mbstring \
-        php7-exif \
-        php7-ftp \
-        php7-openssl \
-        php7-zip \
-        php7-sysvsem \
-        php7-sysvshm \
-        php7-sysvmsg \
-        php7-shmop \
-        php7-sockets \
-        php7-zlib \
-        php7-bz2 \
-        php7-curl \
-        php7-simplexml \
-        php7-xml \
-        php7-opcache \
-        php7-dom \
-        php7-xmlreader \
-        php7-xmlwriter \
-        php7-tokenizer \
-        php7-ctype \
-        php7-session \
-        php7-fileinfo \
-        php7-iconv \
-        php7-mysqli \
-        php7-json \
-        php7-posix \
-        php7-simplexml \
-        php7-pdo \
-        php7-dev \
-        php7-pear \
+        php8-phar \
+        php8-bcmath \
+        php8-calendar \
+        php8-mbstring \
+        php8-exif \
+        php8-ftp \
+        php8-openssl \
+        php8-zip \
+        php8-sysvsem \
+        php8-sysvshm \
+        php8-sysvmsg \
+        php8-shmop \
+        php8-sockets \
+        php8-zlib \
+        php8-bz2 \
+        php8-curl \
+        php8-simplexml \
+        php8-xml \
+        php8-opcache \
+        php8-dom \
+        php8-xmlreader \
+        php8-xmlwriter \
+        php8-tokenizer \
+        php8-ctype \
+        php8-session \
+        php8-fileinfo \
+        php8-iconv \
+        php8-mysqli \
+        php8-json \
+        php8-posix \
+        php8-pdo \
+        php8-dev \
+        php8-pear \
 "
 
 # PHP.earth Alpine repository for better developer experience
@@ -71,7 +71,12 @@ RUN set -x \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log 
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+
+RUN apk add openrc
+RUN apk add nano
+RUN apk add bash
+RUN apk add icu-libs
 
 COPY nginx /
 
@@ -81,23 +86,28 @@ ARG SERVER_ROOT
 RUN sed -i "s#{SERVER_ROOT}#$SERVER_ROOT#g" /etc/nginx/conf.d/default.conf
 VOLUME [ "/var/www/" ]
 WORKDIR /var/www
-COPY php_ini/php.ini /etc/php7/php.ini
+COPY php_ini/php.ini /etc/php8/php.ini
 
 # Composer install
-RUN apk add --no-cache openssl openssl-dev gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk add --no-cache openssl openssl-dev
+RUN apk add curl
 
 ARG DISPLAY_PHPERROR
 RUN if [ ${DISPLAY_PHPERROR} = true ]; then \
-sed -i "s#{DISPLAY}#On#g" /etc/php7/php.ini \
+sed -i "s#{DISPLAY}#On#g" /etc/php8/php.ini \
 ;else \
-sed -i "s#{DISPLAY}#Off#g" /etc/php7/php.ini \
+sed -i "s#{DISPLAY}#Off#g" /etc/php8/php.ini \
 ;fi
 
+RUN apk add gcc make g++ zlib-dev
+RUN ln -s /usr/bin/php8 /usr/bin/php
+
 # mongodb installation
+
+RUN ln -s /usr/bin/phar8 /usr/bin/phar
 RUN apk add --no-cache gdbm libsasl snappy
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
-RUN apk add php7-pecl-mongodb
+RUN apk add --no-cache php8-pecl-mongodb
 
 
 EXPOSE 80
