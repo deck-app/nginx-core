@@ -82,7 +82,7 @@ VOLUME [ "/var/www/" ]
 WORKDIR /var/www
 COPY php_ini/php.ini /etc/php7/php.ini
 
-# Composer install
+# Composer install 
 RUN apk add --no-cache openssl openssl-dev gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
