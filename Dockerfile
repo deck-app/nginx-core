@@ -99,15 +99,15 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php8/php.ini \
 ;fi
 
 RUN apk add gcc make g++ zlib-dev
-RUN ln -s /usr/bin/php8 /usr/bin/php
+#RUN ln -s /usr/bin/php8 /usr/bin/php
 
 # mongodb installation
 
-RUN ln -s /usr/bin/phar8 /usr/bin/phar
+#RUN ln -s /usr/bin/phar8 /usr/bin/phar
 RUN apk add --no-cache gdbm libsasl snappy
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
 RUN apk add --no-cache php8-pecl-mongodb
-
+RUN apk upgrade
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper

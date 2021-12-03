@@ -3,7 +3,7 @@ services:
   nginx:
     build:
       context: '.'
-      dockerfile: 'Dockerfile-${PHP_VERSION}'
+      dockerfile: 'Dockerfile'
       args:
         - 'SERVER_ROOT=${SERVER_ROOT}'
         - 'PHP_VERSION=${PHP_VERSION}'
