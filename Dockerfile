@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.12
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -61,11 +61,8 @@ ARG DEPS="\
         php7-pdo \
         php7-dev \
         php7-pear \
+        php7-gd \
 "
-
-# PHP.earth Alpine repository for better developer experience
-ADD https://repos.php.earth/alpine/phpearth.rsa.pub /etc/apk/keys/phpearth.rsa.pub
-
 RUN set -x \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
@@ -81,10 +78,8 @@ RUN sed -i "s#{SERVER_ROOT}#$SERVER_ROOT#g" /etc/nginx/conf.d/default.conf
 VOLUME [ "/var/www/" ]
 WORKDIR /var/www
 COPY php_ini/php.ini /etc/php7/php.ini
+RUN mv /usr/bin/php7 /usr/bin/php
 
-# Composer install 
-RUN apk add --no-cache openssl openssl-dev gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ARG DISPLAY_PHPERROR
 RUN if [ ${DISPLAY_PHPERROR} = true ]; then \
@@ -98,6 +93,11 @@ RUN apk add --no-cache gdbm libsasl snappy
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
 RUN apk add php7-pecl-mongodb
 
+# Composer install 
+RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
+RUN apk update
+RUN apk upgrade
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
