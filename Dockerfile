@@ -108,6 +108,7 @@ RUN apk add --no-cache gdbm libsasl snappy
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
 RUN apk add --no-cache php8-pecl-mongodb
 RUN apk upgrade
+RUN apk add php8-intl
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
