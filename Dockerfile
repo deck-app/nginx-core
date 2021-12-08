@@ -98,6 +98,7 @@ RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsas
 RUN apk update
 RUN apk upgrade
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk add php7-intl
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
