@@ -58,6 +58,7 @@ ARG DEPS="\
         php5-mysqli \
         php5-dev \
         php5-pear \
+        php5-intl \
 "
 
 # PHP.earth Alpine repository for better developer experience
