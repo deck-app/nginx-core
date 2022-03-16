@@ -60,17 +60,13 @@ ARG DEPS="\
         php5-pear \
         php5-intl \
 "
-
-# PHP.earth Alpine repository for better developer experience
-ADD https://repos.php.earth/alpine/phpearth.rsa.pub /etc/apk/keys/phpearth.rsa.pub
-
 RUN set -x \
     && echo "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN apk add --no-cache openssl openssl-dev gcc make g++ zlib-dev gdbm libsasl snappy openrc nano bash
+RUN apk add --no-cache openssl openssl-dev gcc make g++ zlib-dev gdbm libsasl snappy openrc nano git bash
 
 COPY nginx /
 
