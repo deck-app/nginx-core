@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:edge AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -22,54 +22,53 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ARG DEPS="\
         nginx \
         nginx-mod-http-headers-more \
-        php8 \
-        php8-fpm \
-        composer \
+        php81 \
+        php81-fpm \
         curl \
         ca-certificates \
         runit \
-        php8-phar \
-        php8-bcmath \
-        php8-calendar \
-        php8-mbstring \
-        php8-exif \
-        php8-ftp \
-        php8-openssl \
-        php8-zip \
-        php8-sysvsem \
-        php8-sysvshm \
-        php8-sysvmsg \
-        php8-shmop \
-        php8-sockets \
-        php8-zlib \
-        php8-bz2 \
-        php8-curl \
-        php8-simplexml \
-        php8-xml \
-        php8-opcache \
-        php8-dom \
-        php8-xmlreader \
-        php8-xmlwriter \
-        php8-tokenizer \
-        php8-ctype \
-        php8-session \
-        php8-fileinfo \
-        php8-iconv \
-        php8-mysqli \
-        php8-json \
-        php8-posix \
-        php8-pdo \
-        php8-dev \
-        php8-pear \
+        php81-phar \
+        php81-bcmath \
+        php81-calendar \
+        php81-mbstring \
+        php81-exif \
+        php81-ftp \
+        php81-openssl \
+        php81-zip \
+        php81-sysvsem \
+        php81-sysvshm \
+        php81-sysvmsg \
+        php81-shmop \
+        php81-sockets \
+        php81-zlib \
+        php81-bz2 \
+        php81-curl \
+        php81-simplexml \
+        php81-xml \
+        php81-opcache \
+        php81-dom \
+        php81-xmlreader \
+        php81-xmlwriter \
+        php81-tokenizer \
+        php81-ctype \
+        php81-session \
+        php81-fileinfo \
+        php81-iconv \
+        php81-mysqli \
+        php81-json \
+        php81-posix \
+        php81-pdo \
+        php81-dev \
+        php81-pear \
+        php81-dom \
+        php81-fileinfo \
 "
 
 RUN set -x \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
+    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
-
-RUN apk add openrc git nano bash icu-libs
 
 COPY nginx /
 
@@ -79,30 +78,31 @@ ARG SERVER_ROOT
 RUN sed -i "s#{SERVER_ROOT}#$SERVER_ROOT#g" /etc/nginx/conf.d/default.conf
 VOLUME [ "/var/www/" ]
 WORKDIR /var/www
-COPY php_ini/php.ini /etc/php8/php.ini
+COPY php_ini/php.ini /etc/php81/php.ini
 
 # Composer install
-RUN apk add --no-cache openssl openssl-dev
+RUN apk add --no-cache openssl openssl-dev gcc make g++ zlib-dev git nano bash icu-libs openrc
 RUN apk add curl
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 ARG DISPLAY_PHPERROR
 RUN if [ ${DISPLAY_PHPERROR} = true ]; then \
-sed -i "s#{DISPLAY}#On#g" /etc/php8/php.ini \
+sed -i "s#{DISPLAY}#On#g" /etc/php81/php.ini \
 ;else \
-sed -i "s#{DISPLAY}#Off#g" /etc/php8/php.ini \
+sed -i "s#{DISPLAY}#Off#g" /etc/php81/php.ini \
 ;fi
 
-RUN apk add gcc make g++ zlib-dev
-#RUN ln -s /usr/bin/php8 /usr/bin/php
+RUN ln -s /usr/bin/php81 /usr/bin/php
 
 # mongodb installation
 
 #RUN ln -s /usr/bin/phar8 /usr/bin/phar
-RUN apk add --no-cache gdbm libsasl snappy
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
-RUN apk add --no-cache php8-pecl-mongodb
+RUN apk add --no-cache gdbm libsasl snappy php81-pecl-mongodb
 RUN apk upgrade
-RUN apk add php8-intl
+RUN apk add php81-intl
+FROM scratch
+COPY --from=builder / /
+WORKDIR /var/www
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
