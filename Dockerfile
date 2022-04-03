@@ -47,6 +47,7 @@ ARG DEPS="\
         php81-xml \
         php81-opcache \
         php81-dom \
+        composer \
         php81-xmlreader \
         php81-xmlwriter \
         php81-tokenizer \
@@ -83,7 +84,7 @@ COPY php_ini/php.ini /etc/php81/php.ini
 # Composer install
 RUN apk add --no-cache openssl openssl-dev gcc make g++ zlib-dev git nano bash icu-libs openrc
 RUN apk add curl
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 ARG DISPLAY_PHPERROR
 RUN if [ ${DISPLAY_PHPERROR} = true ]; then \
