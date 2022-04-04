@@ -92,7 +92,7 @@ sed -i "s#{DISPLAY}#On#g" /etc/php81/php.ini \
 sed -i "s#{DISPLAY}#Off#g" /etc/php81/php.ini \
 ;fi
 
-# RUN ln -s /usr/bin/php81 /usr/bin/php
+RUN ln -s /usr/bin/php81 /usr/bin/php
 
 # mongodb installation
 
