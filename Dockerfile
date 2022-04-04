@@ -75,7 +75,7 @@ COPY nginx /
 COPY default.conf /etc/nginx/conf.d/default.conf
 ARG SERVER_ROOT
 
-RUN sed -i "s#{SERVER_ROOT}#$SERVER_ROOT#g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s#{SERVER_ROOT}#${SERVER_ROOT}#g" /etc/nginx/conf.d/default.conf
 VOLUME [ "/var/www/" ]
 WORKDIR /var/www
 COPY php_ini/php.ini /etc/php81/php.ini
