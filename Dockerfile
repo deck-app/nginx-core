@@ -9,11 +9,11 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="2.0" \
       org.label-schema.vendor="PHP" \
       org.label-schema.name="docker-php" \
-      org.label-schema.description="Docker For PHP Developers - Docker image with PHP 8.0.11, Nginx, and Alpine" \
+      org.label-schema.description="Docker For PHP Developers - Docker image with PHP 8.1.4, Nginx, and Alpine" \
       org.label-schema.url="https://github.com/deck-app/nginx-stack"
 
 # PHP_INI_DIR to be symmetrical with official php docker image
-ENV PHP_INI_DIR /etc/php8
+ENV PHP_INI_DIR /etc/php81
 
 # When using Composer, disable the warning about running commands as root/super user
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -47,7 +47,6 @@ ARG DEPS="\
         php81-xml \
         php81-opcache \
         php81-dom \
-        composer \
         php81-xmlreader \
         php81-xmlwriter \
         php81-tokenizer \
@@ -99,8 +98,9 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php81/php.ini \
 
 #RUN ln -s /usr/bin/phar8 /usr/bin/phar
 RUN apk add --no-cache gdbm libsasl snappy php81-pecl-mongodb
-RUN apk upgrade
 RUN apk add php81-intl
+RUN apk upgrade
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 FROM scratch
 COPY --from=builder / /
 WORKDIR /var/www
