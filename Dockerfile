@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:latest
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -64,7 +64,7 @@ ARG DEPS="\
         php7-gd \
 "
 RUN set -x \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
+    # && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log 
@@ -89,9 +89,9 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php7/php.ini \
 ;fi
 
 # mongodb installation
-RUN apk add --no-cache gdbm libsasl snappy git
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
-RUN apk add php7-pecl-mongodb
+RUN apk add --no-cache gdbm libsasl snappy git php7-pecl-mongodb
+# RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
+# RUN apk add php7-pecl-mongodb
 
 # Composer install 
 RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
