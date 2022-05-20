@@ -93,7 +93,6 @@ RUN apk add --no-cache gdbm libsasl snappy git
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
 RUN apk add php7-pecl-mongodb
 
-
 # Composer install 
 RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
 RUN apk update
