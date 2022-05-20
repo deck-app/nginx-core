@@ -89,9 +89,9 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php7/php.ini \
 ;fi
 
 # mongodb installation
-RUN apk add --no-cache gdbm libsasl snappy git php7-pecl-mongodb
-# RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
-# RUN apk add php7-pecl-mongodb
+RUN apk add --no-cache gdbm libsasl snappy git
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
+RUN apk add php7-pecl-mongodb
 
 
 # Composer install 
