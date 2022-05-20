@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.13
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -69,7 +69,13 @@ RUN set -x \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log 
 
-COPY nginx /
+# COPY nginx /
+COPY nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/etc/service/nginx/run /etc/service/nginx/run
+COPY nginx/etc/service/php-fpm/run /etc/service/php-fpm/run
+COPY nginx/sbin/runit-wrapper /sbin/runit-wrapper
+COPY nginx/sbin/runsvdir-start /sbin/runsvdir-start
+
 
 COPY default.conf /etc/nginx/conf.d/default.conf
 ARG SERVER_ROOT
