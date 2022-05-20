@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.12
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
