@@ -63,16 +63,13 @@ ARG DEPS="\
         php8-pear \
 "
 
-# PHP.earth Alpine repository for better developer experience
-ADD https://repos.php.earth/alpine/phpearth.rsa.pub /etc/apk/keys/phpearth.rsa.pub
-
 RUN set -x \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN apk add openrc
+RUN apk add openrc nodejs npm
 RUN apk add nano
 RUN apk add bash
 RUN apk add icu-libs
