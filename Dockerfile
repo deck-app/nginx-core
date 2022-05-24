@@ -1,4 +1,4 @@
-FROM alpine:edge AS builder
+FROM alpine:3.16 AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -65,7 +65,7 @@ ARG DEPS="\
 "
 
 RUN set -x \
-    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories \
+    # && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
@@ -82,7 +82,7 @@ COPY php_ini/php.ini /etc/php81/php.ini
 
 # Composer install
 RUN apk add --no-cache openssl openssl-dev gcc make g++ zlib-dev git nano bash icu-libs openrc
-RUN apk add curl
+RUN apk add curl nodejs npm
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 ARG DISPLAY_PHPERROR
