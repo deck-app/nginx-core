@@ -72,7 +72,7 @@ RUN set -x \
 RUN apk add openrc nodejs npm
 RUN apk add nano
 RUN apk add bash
-RUN apk add icu-libs
+RUN apk add icu-libs git
 
 COPY nginx /
 
