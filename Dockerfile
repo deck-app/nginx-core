@@ -69,7 +69,7 @@ RUN set -x \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN apk add openrc nodejs npm
+RUN apk add openrc nodejs npm shadow
 RUN apk add nano
 RUN apk add bash
 RUN apk add icu-libs git
