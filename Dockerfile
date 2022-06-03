@@ -97,7 +97,7 @@ RUN ln -s /usr/bin/php81 /usr/bin/php
 # mongodb installation
 
 #RUN ln -s /usr/bin/phar8 /usr/bin/phar
-RUN apk add --no-cache gdbm libsasl snappy php81-pecl-mongodb
+RUN apk add --no-cache gdbm libsasl snappy php81-pecl-mongodb shadow
 RUN apk add php81-intl
 RUN apk upgrade
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
