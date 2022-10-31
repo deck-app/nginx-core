@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.16 AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -107,6 +107,9 @@ RUN apk add --no-cache php8-pecl-mongodb
 RUN apk upgrade
 RUN apk add php8-intl
 
+FROM scratch
+COPY --from=builder / /
+WORKDIR /var/www
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
 RUN chmod +x /sbin/runsvdir-start
