@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.16 AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -64,7 +64,6 @@ ARG DEPS="\
 "
 
 RUN set -x \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
@@ -102,11 +101,13 @@ RUN apk add gcc make g++ zlib-dev
 
 #RUN ln -s /usr/bin/phar8 /usr/bin/phar
 RUN apk add --no-cache gdbm libsasl snappy
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
 RUN apk add --no-cache php8-pecl-mongodb
 RUN apk upgrade
 RUN apk add php8-intl
 
+FROM scratch
+COPY --from=builder / /
+WORKDIR /var/www
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
 RUN chmod +x /sbin/runsvdir-start
