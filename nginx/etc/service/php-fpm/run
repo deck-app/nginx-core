@@ -4,4 +4,4 @@ exec 2>&1
 source /env
 
 # exec php-fpm --nodaemonize
-exec php-fpm81 -F
+exec php-fpm82 -F
