@@ -70,7 +70,7 @@ RUN ln -s /usr/bin/php82 /usr/bin/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 WORKDIR /var/www
 COPY php_ini/php.ini /etc/php82/php.ini
-
+RUN apk add curl nodejs npm
 RUN apk add --no-cache php82-pecl-mongodb
 RUN apk upgrade
 
