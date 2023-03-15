@@ -1,4 +1,4 @@
-FROM alpine:3.16 AS builder
+FROM alpine:3.17 AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -92,7 +92,7 @@ sed -i "s#{DISPLAY}#On#g" /etc/php81/php.ini \
 sed -i "s#{DISPLAY}#Off#g" /etc/php81/php.ini \
 ;fi
 
-RUN ln -s /usr/bin/php81 /usr/bin/php
+# RUN ln -s /usr/bin/php81 /usr/bin/php
 
 # mongodb installation
 
