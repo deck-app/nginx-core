@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -64,13 +64,14 @@ ARG DEPS="\
         php7-gd \
 "
 RUN set -x \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
+    # && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log 
 
 # COPY nginx /
 COPY nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/etc/nginx/nginx_back.conf /etc/nginx/nginx.conf
 COPY nginx/etc/service/nginx/run /etc/service/nginx/run
 COPY nginx/etc/service/php-fpm/run /etc/service/php-fpm/run
 COPY nginx/sbin/runit-wrapper /sbin/runit-wrapper
@@ -95,13 +96,13 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php7/php.ini \
 ;fi
 
 # mongodb installation
-RUN apk add --no-cache gdbm libsasl snappy git
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
-RUN apk add php7-pecl-mongodb nodejs npm shadow
+RUN apk add --no-cache gdbm libsasl snappy git php7-pecl-mongodb nodejs npm shadow openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
+# RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories
+# RUN apk add php7-pecl-mongodb nodejs npm shadow
 
 
 # Composer install 
-RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
+# RUN apk add --no-cache openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
 RUN apk update
 RUN apk upgrade
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
