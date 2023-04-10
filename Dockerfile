@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.7
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -96,7 +96,7 @@ sed -i "s#{DISPLAY}#Off#g" /etc/php7/php.ini \
 ;fi
 
 # mongodb installation
-RUN apk add --no-cache ca-certificates curl zip unzip gdbm libsasl snappy git nodejs npm shadow openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
+RUN apk add --no-cache ca-certificates curl zip unzip gdbm libsasl snappy git nodejs shadow openssl openssl-dev python2 gcc make zlib-dev gdbm libsasl snappy openrc nano bash g++
 # RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories
 # RUN apk add php7-pecl-mongodb nodejs npm shadow
 
@@ -121,8 +121,8 @@ RUN apk add php7-intl php7-soap \
 
 # RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories
 # RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.8/community" >> /etc/apk/repositories
-RUN apk update \
-    && apk add php7-mongodb
+# RUN apk update \
+#     && apk add php7-mongodb
 
 EXPOSE 80
 RUN chmod +x /sbin/runit-wrapper
