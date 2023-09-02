@@ -1,4 +1,4 @@
-FROM alpine:3.17 AS builder
+FROM alpine:3.18 AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 
 # Persistent runtime dependencies
@@ -21,6 +21,7 @@ ARG DEPS="\
         php82-sockets \
         php82-zlib \
         php82-bz2 \
+	php82-gd \
         php82-curl \
         php82-simplexml \
         php82-xml \
@@ -55,7 +56,7 @@ ARG DEPS="\
         bash \
 "
 RUN set -x \
-    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+    #&& echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
     && apk add --no-cache $DEPS \
     && mkdir -p /run/nginx \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
